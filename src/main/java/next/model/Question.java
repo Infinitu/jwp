@@ -1,6 +1,8 @@
 package next.model;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Question {
 	private long questionId;
@@ -56,6 +58,16 @@ public class Question {
 	public int getCountOfComment() {
 		return countOfComment;
 	}
+
+	public Map<String,Object> toMap(){
+		Map<String,Object> map = new HashMap<>();
+		map.put("questionId",		questionId);
+		map.put("writer",			writer);
+		map.put("contents",			contents);
+		map.put("createDate",		createdDate);
+		map.put("countOfComment",	countOfComment);
+		return map;
+	};
 
 	@Override
 	public String toString() {

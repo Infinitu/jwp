@@ -1,6 +1,8 @@
 package next.model;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Answer {
 	private long answerId;
@@ -48,7 +50,17 @@ public class Answer {
 	public long getQuestionId() {
 		return questionId;
 	}
-	
+
+	public Map<String,Object> toMap(){
+		Map<String,Object> map = new HashMap<>();
+		map.put("answerId",		answerId);
+		map.put("writer",		writer);
+		map.put("contents",		contents);
+		map.put("createDate",	createdDate);
+		map.put("questionId",	questionId);
+		return map;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

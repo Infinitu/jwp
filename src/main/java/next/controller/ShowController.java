@@ -1,10 +1,14 @@
 package next.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import core.mvc.JsonView;
 import next.dao.AnswerDao;
 import next.dao.QuestionDao;
 import next.model.Answer;
@@ -32,9 +36,38 @@ public class ShowController extends AbstractController {
 		logger.debug("questionId : {}", questionId);
 		question = questionDao.findById(questionId);
 		answers = answerDao.findAllByQuestionId(questionId);
-		ModelAndView mav = jstlView("show.jsp");
+		return createModelAndView(request.getHeader("Accept"),question, answers);
+	}
+
+	ModelAndView createModelAndView(String accept, Question question, List<Answer> answers) {
+		ModelAndView mav = jstlView("/show.jsp");
 		mav.addObject("question", question);
 		mav.addObject("answers", answers);
 		return mav;
+	}
+
+	public static class api extends ShowController{
+
+		@Override
+		ModelAndView createModelAndView(String accept,Question question, List<Answer> answers) {
+			if(accept==null)
+				return super.createModelAndView(accept, question, answers);
+			if(isJsonAccept(accept)){
+
+				List<Map> aList = new ArrayList<>(answers.size());
+				answers.forEach((q) -> aList.add(q.toMap()));
+				Map<String,Object> model = new HashMap<>(1);
+				model.put("answerSize", aList.size());
+				model.put("answers",aList);
+				model.put("question", question.toMap());
+
+				return new ModelAndView(new JsonView(),model);
+			}
+			else if(false/*TODO XML*/){
+				//Do Nothing
+				return null;
+			}
+			return super.createModelAndView(accept, question, answers);
+		}
 	}
 }

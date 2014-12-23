@@ -15,6 +15,10 @@ public class ModelAndView {
 	public ModelAndView(View view) {
 		this.view = view;
 	}
+	public ModelAndView(View view, Map<String, Object> model) {
+		this.view = view;
+		this.model = model;
+	}
 	
 	public ModelAndView addObject(String attributeName, Object attributeValue) {
 		model.put(attributeName, attributeValue);
