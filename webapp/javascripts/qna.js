@@ -18,7 +18,7 @@ function writeAnswers(e) {
 		 if(request.readyState == 4 && request.status == 200) {
 			 location.reload(true);
 		 }
-	 }
+	 };
 	 
 	 request.send(params);
 }

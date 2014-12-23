@@ -20,6 +20,15 @@ CREATE TABLE ANSWERS (
 	questionId			bigint				NOT NULL,				
 	PRIMARY KEY         (answerId)
 );
+DROP TRIGGER IF EXISTS ANSER_CNT_INSERT;
+
+CREATE TRIGGER 'ANSER_CNT_INSERT' AFTER INSERT ON 'ANSWERS' FOR EACH ROW
+	UPDATE QUESTIONS q SET q.countOfComment = q.countOfComment + 1 WHERE q.questionId = NEW.questionId;
+
+DROP TRIGGER IF EXISTS ANSER_CNT_DELETE;
+
+CREATE TRIGGER 'ANSER_CNT_DELETE' BEFORE DELETE ON 'ANSWERS' FOR EACH ROW
+	UPDATE QUESTIONS q SET q.countOfComment = q.countOfComment - 1 WHERE q.questionId = NEW.questionId;
 
 INSERT INTO QUESTIONS (writer, title, contents, createdDate, countOfComment) VALUES
 ('javajigi',
@@ -75,13 +84,3 @@ INSERT INTO ANSWERS (writer, contents, createdDate, questionId) VALUES
 ('Toby Lee',
 '람다식에서 사용되는 변수라면 람다식 내부에서 정의된 로컬 변수이거나 람다식이 선언된 외부의 변수를 참조하는 것일텐데, 전자라면 아무리 변경해도 문제될 이유가 없고, 후자는 변경 자체가 허용이 안될텐데. 이 설명이 무슨 뜻인지 이해가 안 됨.', 
 CURRENT_TIMESTAMP(), 2);
-
-DROP TRIGGER IF EXISTS ANSER_CNT_INSERT;
-
-CREATE TRIGGER ANSER_CNT_INSERT AFTER INSERT ON ANSWERS FOR EACH ROW
-	CALL "next.H2_ANSWER_CNT";
-
-DROP TRIGGER IF EXISTS ANSER_CNT_DELETE;
-
-CREATE TRIGGER ANSER_CNT_DELETE BEFORE DELETE ON ANSWERS FOR EACH ROW
-	CALL "next.H2_ANSWER_CNT";
